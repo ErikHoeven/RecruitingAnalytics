@@ -1,0 +1,72 @@
+doctype html
+html
+  head
+    block head
+      title #{title}
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/layouts/core.min.css?#{cacheBreaker}')
+    link(rel='icon', href='../../favicon.ico')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/javascripts/jquery-ui/jquery-ui.min.css')
+    link(href='/stylesheets/bootstrap.css', rel='stylesheet')
+    script(src='/views/admin/jquery-1.9.1.min.js')
+    script(src='/javascripts/jquery-ui/jquery-ui.min.js')
+    script(src='/javascripts/bootstrap.js')
+    script(src="/javascripts/moment.js")
+    script(src='/views/home/homepageHandler.js')
+    script(src="/bower_components/jsgrid/dist/jsgrid.min.js")
+    script.
+      console.info(user)
+      var user = {}
+      console.info(jQuery.isEmptyObject(!{JSON.stringify(user)}))
+        if (jQuery.isEmptyObject(!{JSON.stringify(user)}) == false){
+          user = !{JSON.stringify(user)}
+        }
+
+      jQuery(document).ready(function (e) {
+        jQuery('#mymodal').trigger('click');
+      });
+
+    block neck
+  body
+    div.navbar.navbar-default.navbar-fixed-top
+      div.container
+        div.navbar-header
+          a.navbar-brand(href='/')
+            img.navbar-logo(src='/images/LGWisdomSmallLettersBigImg.png' alt='Logo' width=500 height=500 )
+            span.navbar-brand-label #{projectName}
+          button.navbar-toggle.collapsed(data-toggle='collapse', data-target='.my-navbar-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        div.navbar-collapse.my-navbar-collapse.collapse
+          ul.nav.navbar-nav
+          script.
+            console.info(user)
+            menuHandler(user);
+          ul.nav.navbar-nav.navbar-right
+          script.
+            loginHander(user)
+
+
+    div.page
+      div.container
+        block body
+
+    div.footer
+      div.container
+        span.copyright.pull-right
+          |&#169; #{copyrightYear} #{copyrightName}
+        ul.links
+          li: a(href='/') Home
+          li: a(href='/contact/') Contact
+        div.clearfix
+
+    div.ajax-spinner
+      img(src='/media/ajax-pulse.gif', alt='Loading')
+
+    //if lte IE 9
+      script(src='/layouts/ie-sucks.min.js?#{cacheBreaker}')
+    //script(src='/layouts/core.min.js?#{cacheBreaker}')
+
+    block feet
