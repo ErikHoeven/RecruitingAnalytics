@@ -1,6 +1,4 @@
-doctype html
-html(lang='en')
-  head
+block head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
@@ -12,7 +10,13 @@ html(lang='en')
     link(href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i', rel='stylesheet')
     // Custom styles for this template
     link(href='css/sb-admin-2.min.css', rel='stylesheet')
-  body#page-top
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js')
+    script(type='text/javascript', src='http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js')
+    link(rel='stylesheet', type='text/css', href='http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css')
+    script(src='../js/TussenPersoonGrid.js')
+
+    
+  block content#page-top
     // Page Wrapper
     #wrapper
       // Sidebar
@@ -34,7 +38,7 @@ html(lang='en')
         hr.sidebar-divider
         // Heading
         .sidebar-heading
-          | Interface
+          | Invoer en mutaties
         // Nav Item - Pages Collapse Menu
         li.nav-item
           a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapseTwo', aria-expanded='true', aria-controls='collapseTwo')
@@ -44,46 +48,49 @@ html(lang='en')
             .bg-white.py-2.collapse-inner.rounded
               h6.collapse-header Refferentie Aanvragen:
               a.collapse-item(href='/Locatie') Locatie
-              a.collapse-item(href='/Tussenpersonen') Tussenpersonen
-        // Nav Item - Utilities Collapse Menu
+              //a.collapse-item(href='/Tussenpersonen') Tussenpersonen
+              a.collapse-item(data-toggle="modal" data-target="#myLargeModalLabel" id="menuTussenPersonen") Tussenpersonen
+        // Nav Item - Kandidaten
         li.nav-item
           a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapseUtilities', aria-expanded='true', aria-controls='collapseUtilities')
             i.fas.fa-fw.fa-wrench
-            span Utilities
+            span Kandidaten
           #collapseUtilities.collapse(aria-labelledby='headingUtilities', data-parent='#accordionSidebar')
             .bg-white.py-2.collapse-inner.rounded
               h6.collapse-header Custom Utilities:
-              a.collapse-item(href='utilities-color.html') Colors
-              a.collapse-item(href='utilities-border.html') Borders
-              a.collapse-item(href='utilities-animation.html') Animations
-              a.collapse-item(href='utilities-other.html') Other
+              a.collapse-item(href='utilities-color.html') CV
+              a.collapse-item(href='utilities-border.html') Refferenties
+              a.collapse-item(href='utilities-animation.html') ..
+              a.collapse-item(href='utilities-other.html') ....
         // Divider
         hr.sidebar-divider
         // Heading
         .sidebar-heading
-          | Addons
-        // Nav Item - Pages Collapse Menu
+          | Rapportages
+        // Nav Item - Rapportages aanvragen
         li.nav-item
           a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapsePages', aria-expanded='true', aria-controls='collapsePages')
             i.fas.fa-fw.fa-folder
-            span Pages
+            span Aanvragen
           #collapsePages.collapse(aria-labelledby='headingPages', data-parent='#accordionSidebar')
             .bg-white.py-2.collapse-inner.rounded
               h6.collapse-header Login Screens:
-              a.collapse-item(href='login.html') Login
-              a.collapse-item(href='register.html') Register
-              a.collapse-item(href='forgot-password.html') Forgot Password
+              a.collapse-item(href='login.html') ..
+              a.collapse-item(href='register.html') ...
+              a.collapse-item(href='forgot-password.html') ....
+         // Nav Item - Rapportages kandidaten
+        li.nav-item
+          a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapsePages', aria-expanded='true', aria-controls='collapsePages')
+            i.fas.fa-fw.fa-folder
+            span kandidaten
+          #collapsePages.collapse(aria-labelledby='headingPages', data-parent='#accordionSidebar')
+            .bg-white.py-2.collapse-inner.rounded
+              h6.collapse-header Login Screens:
+              a.collapse-item(href='login.html') ..
+              a.collapse-item(href='register.html') ...
+              a.collapse-item(href='forgot-password.html') ....
               .collapse-divider
-        // Nav Item - Charts
-        li.nav-item
-          a.nav-link(href='charts.html')
-            i.fas.fa-fw.fa-chart-area
-            span Charts
-        // Nav Item - Tables
-        li.nav-item
-          a.nav-link(href='tables.html')
-            i.fas.fa-fw.fa-table
-            span Tables
+              .collapse-divider
         // Divider
         hr.sidebar-divider.d-none.d-md-block
         // Sidebar Toggler (Sidebar)
@@ -126,96 +133,6 @@ html(lang='en')
                   i.fas.fa-bell.fa-fw
                   // Counter - Alerts
                   span.badge.badge-danger.badge-counter 3+
-                // Dropdown - Alerts
-                .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='alertsDropdown')
-                  h6.dropdown-header
-                    | Alerts Center
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .mr-3
-                      .icon-circle.bg-primary
-                        i.fas.fa-file-alt.text-white
-                    div
-                      .small.text-gray-500 December 12, 2019
-                      span.font-weight-bold A new monthly report is ready to download!
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .mr-3
-                      .icon-circle.bg-success
-                        i.fas.fa-donate.text-white
-                    div
-                      .small.text-gray-500 December 7, 2019
-                      |                     $290.29 has been deposited into your account!
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .mr-3
-                      .icon-circle.bg-warning
-                        i.fas.fa-exclamation-triangle.text-white
-                    div
-                      .small.text-gray-500 December 2, 2019
-                      |                     Spending Alert: We've noticed unusually high spending for your account.
-                  a.dropdown-item.text-center.small.text-gray-500(href='#') Show All Alerts
-              // Nav Item - Messages
-              li.nav-item.dropdown.no-arrow.mx-1
-                a#messagesDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                  i.fas.fa-envelope.fa-fw
-                  // Counter - Messages
-                  span.badge.badge-danger.badge-counter 7
-                // Dropdown - Messages
-                .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='messagesDropdown')
-                  h6.dropdown-header
-                    | Message Center
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .dropdown-list-image.mr-3
-                      img.rounded-circle(src='https://source.unsplash.com/fn_BT9fwg_E/60x60', alt='')
-                      .status-indicator.bg-success
-                    .font-weight-bold
-                      .text-truncate Hi there! I am wondering if you can help me with a problem I've been having.
-                      .small.text-gray-500 Emily Fowler · 58m
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .dropdown-list-image.mr-3
-                      img.rounded-circle(src='https://source.unsplash.com/AU4VPcFN4LE/60x60', alt='')
-                      .status-indicator
-                    div
-                      .text-truncate
-                        | I have the photos that you ordered last month, how would you like them sent to you?
-                      .small.text-gray-500 Jae Chun · 1d
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .dropdown-list-image.mr-3
-                      img.rounded-circle(src='https://source.unsplash.com/CS2uCrpNzJY/60x60', alt='')
-                      .status-indicator.bg-warning
-                    div
-                      .text-truncate
-                        | Last month's report looks great, I am very happy with the progress so far, keep up the good work!
-                      .small.text-gray-500 Morgan Alvarez · 2d
-                  a.dropdown-item.d-flex.align-items-center(href='#')
-                    .dropdown-list-image.mr-3
-                      img.rounded-circle(src='https://source.unsplash.com/Mv9hjnEUHR4/60x60', alt='')
-                      .status-indicator.bg-success
-                    div
-                      .text-truncate
-                        | Am I a good boy? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...
-                      .small.text-gray-500 Chicken the Dog · 2w
-                  a.dropdown-item.text-center.small.text-gray-500(href='#') Read More Messages
-              .topbar-divider.d-none.d-sm-block
-              // Nav Item - User Information
-              li.nav-item.dropdown.no-arrow
-                a#userDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                  span.mr-2.d-none.d-lg-inline.text-gray-600.small Valerie Luna
-                  img.img-profile.rounded-circle(src='https://source.unsplash.com/QAB-WJcbgJk/60x60')
-                // Dropdown - User Information
-                .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='userDropdown')
-                  a.dropdown-item(href='#')
-                    i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
-                    |                   Profile
-                  a.dropdown-item(href='#')
-                    i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
-                    |                   Settings
-                  a.dropdown-item(href='#')
-                    i.fas.fa-list.fa-sm.fa-fw.mr-2.text-gray-400
-                    |                   Activity Log
-                  .dropdown-divider
-                  a.dropdown-item(href='#', data-toggle='modal', data-target='#logoutModal')
-                    i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
-                    |                   Logout
-          // End of Topbar
           // Begin Page Content
           .container-fluid
             // Page Heading
@@ -226,7 +143,7 @@ html(lang='en')
                 |  Generate Report
             // Content Row
             .row
-              // Earnings (Monthly) Card Example
+              // Aantal aanvragen (actueel)
               .col-xl-3.col-md-6.mb-4
                 .card.border-left-primary.shadow.h-100.py-2
                   .card-body
@@ -236,7 +153,7 @@ html(lang='en')
                         .h5.mb-0.font-weight-bold.text-gray-800 100
                       .col-auto
                         i.fas.fa-calendar.fa-2x.text-gray-300
-              // Earnings (Monthly) Card Example
+              // Aantal ingevulde aanvragen (actueel)
               .col-xl-3.col-md-6.mb-4
                 .card.border-left-success.shadow.h-100.py-2
                   .card-body
@@ -246,7 +163,7 @@ html(lang='en')
                         .h5.mb-0.font-weight-bold.text-gray-800 10
                       .col-auto
                         i.fas.fa-dollar-sign.fa-2x.text-gray-300
-              // Earnings (Monthly) Card Example
+              // Aantal kandidaten
               .col-xl-3.col-md-6.mb-4
                 .card.border-left-info.shadow.h-100.py-2
                   .card-body
@@ -261,7 +178,7 @@ html(lang='en')
                               .progress-bar.bg-info(role='progressbar', style='width: 50%', aria-valuenow='50', aria-valuemin='0', aria-valuemax='100')
                       .col-auto
                         i.fas.fa-clipboard-list.fa-2x.text-gray-300
-              // Pending Requests Card Example
+              // Aantal geplaastst kandidaten
               .col-xl-3.col-md-6.mb-4
                 .card.border-left-warning.shadow.h-100.py-2
                   .card-body
@@ -271,8 +188,19 @@ html(lang='en')
                         .h5.mb-0.font-weight-bold.text-gray-800 18
                       .col-auto
                         i.fas.fa-comments.fa-2x.text-gray-300
-            // Content Row
+            // Modal Tussenpersoon
             .row
+              #myLargeModalLabel.modal.fade.bd-example-modal-xl(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel', aria-hidden='true')
+                .modal-dialog.modal-xl(role='document')
+                  .modal-content
+                    .modal-header
+                      h5#exampleModalLabel.modal-title Muteren tussenpersonen
+                      button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    .modal-body
+                      #grid(style='width: 800px; height: 400px;')
+                    .modal-footer
+                      button.btn.btn-secondary(type='button', data-dismiss='modal') Close
               // Area Chart
               .col-xl-8.col-lg-7
                 .card.shadow.mb-4
@@ -355,62 +283,6 @@ html(lang='en')
                       span.float-right Complete!
                     .progress
                       .progress-bar.bg-success(role='progressbar', style='width: 100%', aria-valuenow='100', aria-valuemin='0', aria-valuemax='100')
-                // Color System
-                .row
-                  .col-lg-6.mb-4
-                    .card.bg-primary.text-white.shadow
-                      .card-body
-                        | Primary
-                        .text-white-50.small #4e73df
-                  .col-lg-6.mb-4
-                    .card.bg-success.text-white.shadow
-                      .card-body
-                        | Success
-                        .text-white-50.small #1cc88a
-                  .col-lg-6.mb-4
-                    .card.bg-info.text-white.shadow
-                      .card-body
-                        | Info
-                        .text-white-50.small #36b9cc
-                  .col-lg-6.mb-4
-                    .card.bg-warning.text-white.shadow
-                      .card-body
-                        | Warning
-                        .text-white-50.small #f6c23e
-                  .col-lg-6.mb-4
-                    .card.bg-danger.text-white.shadow
-                      .card-body
-                        | Danger
-                        .text-white-50.small #e74a3b
-                  .col-lg-6.mb-4
-                    .card.bg-secondary.text-white.shadow
-                      .card-body
-                        | Secondary
-                        .text-white-50.small #858796
-              .col-lg-6.mb-4
-                // Illustrations
-                .card.shadow.mb-4
-                  .card-header.py-3
-                    h6.m-0.font-weight-bold.text-primary Illustrations
-                  .card-body
-                    .text-center
-                      img.img-fluid.px-3.px-sm-4.mt-3.mb-4(style='width: 25rem;', src='img/undraw_posting_photo.svg', alt='')
-                    p
-                      | Add some quality, svg illustrations to your project courtesy of 
-                      a(target='_blank', rel='nofollow', href='https://undraw.co/') unDraw
-                      | , a constantly updated collection of beautiful svg images that you can use completely free and without attribution!
-                    a(target='_blank', rel='nofollow', href='https://undraw.co/') Browse Illustrations on unDraw →
-                // Approach
-                .card.shadow.mb-4
-                  .card-header.py-3
-                    h6.m-0.font-weight-bold.text-primary Development Approach
-                  .card-body
-                    p
-                      | SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.
-                    p.mb-0
-                      | Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.
-          // /.container-fluid
-          // End of Main Content
           // Footer
           footer.sticky-footer.bg-white
             .container.my-auto
@@ -435,7 +307,7 @@ html(lang='en')
                   button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
                   a.btn.btn-primary(href='login.html') Logout
           // Bootstrap core JavaScript
-          script(src='vendor/jquery/jquery.min.js')
+          //script(src='vendor/jquery/jquery.min.js')
           script(src='vendor/bootstrap/js/bootstrap.bundle.min.js')
           // Core plugin JavaScript
           script(src='vendor/jquery-easing/jquery.easing.min.js')
@@ -444,6 +316,9 @@ html(lang='en')
           // Page level plugins
           script(src='vendor/chart.js/Chart.min.js')
           // Page level custom scripts
-          script(src='js/demo/chart-area-demo.js')
+          //script(src='js/demo/chart-area-demo.js')
+          script(src='https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.1/jsgrid.min.js')
+          script(src='../js/TussenPersoonGrid.js')
+          //script(src='../js/agGridData.js')
           script(src='js/demo/chart-pie-demo.js')
 

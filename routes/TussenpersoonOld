@@ -1,5 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var clientsData = require('../db/client.json');
+var Datastore = require('nedb');
+var db = new Datastore();
+db.insert(clientsData);
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var uuid = require('node-uuid');
@@ -11,12 +15,12 @@ var config = {
     authentication: {
         type: 'azure-active-directory-password',
         options: {
-            userName: 'ehoeven@wisdomasaservice.nl', 
-            password: 'M@r13ke1sl13f10' 
+            userName: 'ehoeven@wisdomasaservice.nl', // update me
+            password: 'M@r13ke1sl13f10' // update me
         }
     },
     options: {
-        database: 'ontw-DataVaultGen', encrypt: true, rowCollectionOnRequestCompletion: true
+        database: 'ontw-DataVaultGen', encrypt: true
     }
 };
 
@@ -37,30 +41,44 @@ exports.LoadData = function (req, res, next){
                 console.info(err);
             } else {
                 console.log(rowCount + ' row(s) returned');
-                jsonArray = []
-                rows.forEach(function (columns) {
-                    var rowObject ={}
-                    columns.forEach(function(column) {
-                        rowObject[column.metadata.colName] = column.value;
-                    });
-                    jsonArray.push(rowObject)
-                })
-                console.info(jsonArray)
-
                 connection.close()
-                
             }
         })
+
         // Print the rows read
-        request.on('row', function(columns) {         
+        var result = "";
+        var tussenperoon = {}
+        var filter = []
+        var record = 1
+        var i = 1
+        var colTable = 10
+        var pair = 2
+        value = ''
+        request.on('row', function(columns) {
+            console.info('-------COLUMN--------------')
+            console.info(columns.TussenPersoonId)
+            console.info('---------------------')
+            columns.forEach(function(column) {     
+               if (column.value === null || column.metadata.colName ==  'BijwerkDatum') {
+                    //console.log('NULL');
+                } else {
+                    tussenperoon[column.metadata.colName] = column.value
+                }
+                pushToArray(filter,tussenperoon)           
+            })
+            
+          
+            pushToArray(filter,tussenperoon)       
+            
         })
+        // console.info('--------------------')
+        // console.info(filter)
+        // res.json(filter)
+        // console.info('--------------------')
         connection.execSql(request)
     })   
 }
     
-   
-
-           
   
 exports.UpdateData = function (req, res, next){
     console.info('UpdateData')

@@ -89,7 +89,7 @@ function toonTussenPersoon(naams) {
         var lstTussenPersonen = []
         request.on('row', function(columns) {
         columns.forEach(function(column) {
-            if (column.value === null) {
+            if (column.value === null || column.metadata.colName == 'TussenPersoonId') {
                 console.log('NULL');
             } else {
                 tussenperoon[column.metadata.colName] = column.value
