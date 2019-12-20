@@ -47,6 +47,16 @@ exports.LoadData = function (req, res, next){
                 })
                 console.info(jsonArray)
 
+                var theader = ''
+                , tbody = ''
+                , optionlist = ''
+                , table = ''
+                , columns = ['Naam','Adres','Plaats','Telefoon','ContactPersoon']
+                , body = setBody(jsonArray)
+                , header = setHeader(columns)
+                
+                res.status(200).json({header: header, body: body, count: jsonArray.count})
+                
                 connection.close()
                 
             }
@@ -122,20 +132,21 @@ function setBody(ds) {
     ds.forEach(function (row) {
 
             if (!row.hide_input){
-
-                strBody = strBody + '<tr><td id="firstname' + row._id +'">'+ row.Name + '</td>' +
-                    '<td id="lastname' + row._id +'">'+ row.lastname + '</td>' +
-                    '<td id="role' + row._id +'">'+ row.role + '</td>' +
-                    '<td id="percFullTime' + row._id +'">'+ row.percFullTime + '</td>' +
-                    '<td id="edit'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="updateEmployeeField(\'' +row._id + '\',\'' + row.firstname + '\',\''+  row.lastname + '\',\'' + row.role + '\',\'' + row.percFullTime + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                    '<td id="del'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="removeEmployeeValue(\'' +row._id + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                strBody = strBody + 
+                    '<tr><td id="Naam' + row.TussenPersoonId +'">'+ row.Naam + '</td>' +
+                    '<td id="Adres' + row.TussenPersoonId +'">'+ row.Adres + '</td>' +
+                    '<td id="Plaats' + row.TussenPersoonId +'">'+ row.Plaats + '</td>' +
+                    '<td id="Telefoon' + row.TussenPersoonId +'">'+ row.Telefoon + '</td>' +
+                    '<td id="ContactPersoon' + row.TussenPersoonId +'">'+ row.ContactPersoon + '</td>' +
+                    '<td id="edit'+ row.TussenPersoonId + '"><button type="button" class="btn btn-primary" onclick="updateTussenPersoon(\'' +row.TussenPersoonId + '\',\'' + row.Naam + '\',\''+  row.Adres + '\',\'' + row.Plaats + '\',\'' + row.Telefoon + '\',\'' + row.ContactPersoon + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="del'+ row.TussenPersoonId + '"><button type="button"  class="btn btn-primary" onclick="removeTussenPersoon(\'' +row.TussenPersoonId + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                     '</tr>'
             }
             else{
-                strBody = strBody + '<tr><td id="firstname' + row._id +'">'+ row.firstname + '</td>' +
-                '<td id="lastname' + row._id +'">'+ row.lastname + '</td>' +
-                '<td id="role' + row._id +'">'+ row.role + '</td>' +
-                '<td id="percFullTime' + row._id +'">'+ row.percFullTime + '</td></tr>'
+                strBody = strBody + '<tr><td id="firstname' + row.TussenPersoonId +'">'+ row.firstname + '</td>' +
+                '<td id="lastname' + row.TussenPersoonId +'">'+ row.lastname + '</td>' +
+                '<td id="role' + row.TussenPersoonId +'">'+ row.role + '</td>' +
+                '<td id="percFullTime' + row.TussenPersoonId +'">'+ row.percFullTime + '</td></tr>'
             }
     })
 
