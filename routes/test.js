@@ -9,8 +9,8 @@ var config = {
     authentication: {
         type: 'azure-active-directory-password',
         options: {
-            userName: 'ehoeven@wisdomasaservice.nl', // update me
-            password: 'M@r13ke1sl13f10' // update me
+            userName: 'ehoeven@wisdomasaservice.nl', 
+            password: 'M@r13ke1sl13f10' 
         }
     },
     options: {
@@ -125,3 +125,16 @@ toonTussenPersoon()
 
 
 
+function pushToArray ( arr, obj ) {
+    var existingIds = arr.map((obj) => obj.id);
+  
+      if (! existingIds.includes(obj.id)) {
+        arr.push(obj);
+      } else {
+        arr.forEach((element, index) => {
+          if (element.id === obj.id) {
+            arr[index] = obj;
+          };
+        });
+      };
+  };

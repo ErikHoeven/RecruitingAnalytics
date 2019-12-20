@@ -20,6 +20,8 @@ var config = {
     }
 };
 
+
+
 exports.init = function (req, res, next) {
     console.info('Tussenpersoon.js')
         res.render('../views/tussenpersonen/Tussenpersoon');
@@ -27,11 +29,10 @@ exports.init = function (req, res, next) {
 
 exports.LoadData = function (req, res, next){
     console.info('LoadData')
-  
     var connection = new Connection(config);
     connection.on('connect', function (err) {
         request = new Request(
-            'select t.TussenPersoonId, t.Naam, t.Adres, t.Plaats, t.Postcode, t.Telefoon, t.Postcode, t.ContactPersoon from wp_ra.tussenpersoon t;',
+            'select t.TussenPersoonId, t.Naam, t.Adres, t.Plaats, t.Postcode, t.Telefoon, t.Postcode, t.ContactPersoon, t.Marge from wp_ra.tussenpersoon t;',
             function(err, rowCount, rows) {
             if (err) {
                 console.info(err);
@@ -51,7 +52,7 @@ exports.LoadData = function (req, res, next){
                 , tbody = ''
                 , optionlist = ''
                 , table = ''
-                , columns = ['Naam','Adres','Plaats','Telefoon','ContactPersoon']
+                , columns = ['Naam','Adres','Plaats','Postcode','Telefoon','ContactPersoon','Marge']
                 , body = setBody(jsonArray)
                 , header = setHeader(columns)
                 
@@ -65,50 +66,42 @@ exports.LoadData = function (req, res, next){
         request.on('row', function(columns) {         
         })
         connection.execSql(request)
-    })   
-}
-    
-   
+    }) 
+}  
 
-           
-  
+    
+    
 exports.UpdateData = function (req, res, next){
     console.info('UpdateData')
-    var item = prepareItem(req.body);
-
-    db.update({ _id: item._id }, item, {}, function(err) {
-        res.json(item);
-    }
-)}
+    var item = req.body.tussenpersoon;
+    console.info(item)
+    console.info(item.TussenPersoonId)
+    wijzigenTussenPersoon(item.Naam, item.Adres, item.Plaats,item.Postcode, item.Telefoon, item.ContactPersoon, item.Marge, item.TussenPersoonId)
+    res.status(200).json({message:"Succesvol bijgewerkt"})
+    
+}
 
 exports.InsertData = function (req, res, next){
-    db.insert(prepareItem(req.body), function(err, item) {
-        res.json(item);
-    }
-)}
+    console.info('InsertData')
+    var item = req.body.tussenpersoon;
+    console.info(item)
+    invoerenTussenPersoon(item.Naam, item.Adres, item.Plaats, item.Postcode, item.Telefoon, item.ContactPersoon, item.Marge)
+    res.status(200).json({message:"Succesvol toegevoegd"})
+
+
+    
+}
 
 exports.DeleteData = function (req, res, next){
-    var item = prepareItem(req.body);
+    var item = req.body.id
 
-    db.remove({ _id: item._id }, {}, function(err) {
-        res.json(item);
-    }
-)}
+    verwijderenTussenPersoon(item)
+ 
 
 
-function pushToArray ( arr, obj ) {
-    var existingIds = arr.map((obj) => obj.id);
-  
-      if (! existingIds.includes(obj.id)) {
-        arr.push(obj);
-      } else {
-        arr.forEach((element, index) => {
-          if (element.id === obj.id) {
-            arr[index] = obj;
-          };
-        });
-      };
-  };
+
+
+}
 
   function setHeader(lstColumns) {
     var strHeader = '<theader>'
@@ -136,9 +129,11 @@ function setBody(ds) {
                     '<tr><td id="Naam' + row.TussenPersoonId +'">'+ row.Naam + '</td>' +
                     '<td id="Adres' + row.TussenPersoonId +'">'+ row.Adres + '</td>' +
                     '<td id="Plaats' + row.TussenPersoonId +'">'+ row.Plaats + '</td>' +
+                    '<td id="Postcode' + row.TussenPersoonId +'">'+ row.Postcode + '</td>' +
                     '<td id="Telefoon' + row.TussenPersoonId +'">'+ row.Telefoon + '</td>' +
                     '<td id="ContactPersoon' + row.TussenPersoonId +'">'+ row.ContactPersoon + '</td>' +
-                    '<td id="edit'+ row.TussenPersoonId + '"><button type="button" class="btn btn-primary" onclick="updateTussenPersoon(\'' +row.TussenPersoonId + '\',\'' + row.Naam + '\',\''+  row.Adres + '\',\'' + row.Plaats + '\',\'' + row.Telefoon + '\',\'' + row.ContactPersoon + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="Marge' + row.TussenPersoonId +'">'+ row.Marge + '</td>' +
+                    '<td id="edit'+ row.TussenPersoonId + '"><button type="button" class="btn btn-primary" onclick="updateTussenPersoon(\'' +row.TussenPersoonId + '\',\'' + row.Naam + '\',\''+  row.Adres + '\',\'' + row.Plaats + '\',\'' + row.Postcode + '\',\'' + row.Telefoon + '\',\'' + row.ContactPersoon + '\',\'' + row.Marge + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
                     '<td id="del'+ row.TussenPersoonId + '"><button type="button"  class="btn btn-primary" onclick="removeTussenPersoon(\'' +row.TussenPersoonId + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                     '</tr>'
             }
@@ -153,3 +148,57 @@ function setBody(ds) {
     strBody = strBody + '</tbody>'
     return strBody
 }
+
+function wijzigenTussenPersoon(naam, adres, plaats, postcode, telefoon, contactpersoon, marge, TussenPersoonId) {
+    var connection = new Connection(config);   
+    var query = 'exec wp_ra.wijzigenTussenPersoon ' + '\'' + naam + '\',\'' +  adres  + '\',\'' + plaats  + '\',\'' + postcode + '\',\'' + telefoon + '\',\'' + contactpersoon + '\','  + marge + ','  + TussenPersoonId
+    connection.on('connect', function (err) {
+        request = new Request(query,function(err, rowCount, rows) {
+            if (err) {
+                console.info(err);
+            } else {
+                console.log(rowCount + ' row(s) updated');
+                connection.close()
+            }
+        })
+        connection.execSql(request)
+    })   
+}
+
+
+function invoerenTussenPersoon(naam, adres, plaats, postcode,telefoon, contactpersoon, marge) {
+    var connection = new Connection(config);
+    var query = 'exec wp_ra.invoerenTussenPersoon ' + '\'' + naam + '\',\'' +  adres  + '\',\'' + plaats  + '\',\'' + postcode + '\',\'' + telefoon + '\',\'' + contactpersoon + '\','  + marge
+    console.info(query)
+    connection.on('connect', function (err) {
+        request = new Request(
+            query,
+            function(err, rowCount, rows) {
+            if (err) {
+                console.info(err);
+            } else {
+                console.log(rowCount + ' row(s) inserted');
+                connection.close()
+            }
+        })
+        connection.execSql(request)
+    })   
+}
+
+function verwijderenTussenPersoon(id) {
+    var connection = new Connection(config);
+    connection.on('connect', function (err) {
+        request = new Request(
+            'DELETE FROM [wp_ra].[tussenpersoon] WHERE TussenPersoonId = ' + id ,
+            function(err, rowCount, rows) {
+            if (err) {
+                console.info(err);
+            } else {
+                console.log(rowCount + ' row(s) removed');
+                connection.close()
+            }
+        })
+        connection.execSql(request)
+    })   
+}
+   
