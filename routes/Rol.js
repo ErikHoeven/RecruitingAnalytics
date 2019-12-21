@@ -1,10 +1,6 @@
 var express = require('express');
-var router = express.Router();
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
-var uuid = require('node-uuid');
-var async = require('async');
-var underscor = require('underscore')
 
 var config = {
     server: 'srvdvgenerator.database.windows.net',
@@ -25,7 +21,7 @@ exports.LoadData = function (req, res, next){
     var connection = new Connection(config);
     connection.on('connect', function (err) {
         request = new Request(
-            'select t.TussenPersoonId, t.Naam, t.Adres, t.Plaats, t.Postcode, t.Telefoon, t.Postcode, t.ContactPersoon, t.Marge from wp_ra.tussenpersoon t;',
+            'select t.RolNaam, t.RolMinTarief ,t.RolMaxTarief, t.RolId from wp_ra.rol t;',
             function(err, rowCount, rows) {
             if (err) {
                 console.info(err);
@@ -45,7 +41,7 @@ exports.LoadData = function (req, res, next){
                 , tbody = ''
                 , optionlist = ''
                 , table = ''
-                , columns = ['Naam','Adres','Plaats','Postcode','Telefoon','ContactPersoon','Marge']
+                , columns = ['Rolnaam','RolMinTarief','RolMaxTarief']
                 , body = setBody(jsonArray)
                 , header = setHeader(columns)
                 
@@ -61,24 +57,22 @@ exports.LoadData = function (req, res, next){
         connection.execSql(request)
     }) 
 }  
-
-    
-    
+      
 exports.UpdateData = function (req, res, next){
     console.info('UpdateData')
-    var item = req.body.tussenpersoon;
+    var item = req.body.rol;
     console.info(item)
-    console.info(item.TussenPersoonId)
-    wijzigenTussenPersoon(item.Naam, item.Adres, item.Plaats,item.Postcode, item.Telefoon, item.ContactPersoon, item.Marge, item.TussenPersoonId)
+    console.info(item.RolId)
+    wijzigenRol(item.RolNaam, item.RolMinTarief, item.RolMaxTarief, item.RolId)
     res.status(200).json({message:"Succesvol bijgewerkt"})
     
 }
 
 exports.InsertData = function (req, res, next){
     console.info('InsertData')
-    var item = req.body.tussenpersoon;
+    var item = req.body.rol;
     console.info(item)
-    invoerenTussenPersoon(item.Naam, item.Adres, item.Plaats, item.Postcode, item.Telefoon, item.ContactPersoon, item.Marge)
+    invoerenRol(item.RolNaam, item.RolMinTarief, item.RolMaxTarief)
     res.status(200).json({message:"Succesvol toegevoegd"})
 
 
@@ -87,8 +81,9 @@ exports.InsertData = function (req, res, next){
 
 exports.DeleteData = function (req, res, next){
     var item = req.body.id
-
-    verwijderenTussenPersoon(item)
+    console.info('item')
+    console.info(item)
+    verwijderenRol(item)
  
 
 
@@ -113,21 +108,18 @@ exports.DeleteData = function (req, res, next){
 
 function setBody(ds) {
     var strBody = '<tbody>'
-
+    console.info('setBody')
+    console.info(ds)
 
     ds.forEach(function (row) {
 
             if (!row.hide_input){
                 strBody = strBody + 
-                    '<tr><td id="Naam' + row.TussenPersoonId +'">'+ row.Naam + '</td>' +
-                    '<td id="Adres' + row.TussenPersoonId +'">'+ row.Adres + '</td>' +
-                    '<td id="Plaats' + row.TussenPersoonId +'">'+ row.Plaats + '</td>' +
-                    '<td id="Postcode' + row.TussenPersoonId +'">'+ row.Postcode + '</td>' +
-                    '<td id="Telefoon' + row.TussenPersoonId +'">'+ row.Telefoon + '</td>' +
-                    '<td id="ContactPersoon' + row.TussenPersoonId +'">'+ row.ContactPersoon + '</td>' +
-                    '<td id="Marge' + row.TussenPersoonId +'">'+ row.Marge + '</td>' +
-                    '<td id="edit'+ row.TussenPersoonId + '"><button type="button" class="btn btn-primary" onclick="updateTussenPersoon(\'' +row.TussenPersoonId + '\',\'' + row.Naam + '\',\''+  row.Adres + '\',\'' + row.Plaats + '\',\'' + row.Postcode + '\',\'' + row.Telefoon + '\',\'' + row.ContactPersoon + '\',\'' + row.Marge + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                    '<td id="del'+ row.TussenPersoonId + '"><button type="button"  class="btn btn-primary" onclick="removeTussenPersoon(\'' +row.TussenPersoonId + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                    '<tr><td id="RolNaam' + row.RolId +'">'+ row.RolNaam + '</td>' +
+                    '<td id="RolMinTarief' + row.RolId +'">'+ row.RolMinTarief + '</td>' +
+                    '<td id="RolMaxTarief' + row.RolId +'">'+ row.RolMaxTarief + '</td>' +                    
+                    '<td id="edit'+ row.RolId + '"><button type="button" class="btn btn-primary" onclick="updateRolFields(\'' +row.RolId + '\',\'' + row.RolNaam + '\',\''+  row.RolMinTarief + '\',\'' + row.RolMaxTarief + '\')"><span id="span"'+ row.TussenPersoonId +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="del'+ row.RolId + '"><button type="button"  class="btn btn-primary" onclick="removeRol(\'' +row.RolId + '\')"><span id="span"'+ row.RolId +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                     '</tr>'
             }
             else{
@@ -142,9 +134,9 @@ function setBody(ds) {
     return strBody
 }
 
-function wijzigenTussenPersoon(naam, adres, plaats, postcode, telefoon, contactpersoon, marge, TussenPersoonId) {
+function wijzigenRol(RolNaam, RolMinTarief, RolMaxTarief, RolId) {
     var connection = new Connection(config);   
-    var query = 'exec wp_ra.wijzigenTussenPersoon ' + '\'' + naam + '\',\'' +  adres  + '\',\'' + plaats  + '\',\'' + postcode + '\',\'' + telefoon + '\',\'' + contactpersoon + '\','  + marge + ','  + TussenPersoonId
+    var query = 'exec wp_ra.wijzigenRol ' + '\'' + RolNaam  + '\',' + RolMinTarief  + ',' + RolMaxTarief + ',' + RolId 
     connection.on('connect', function (err) {
         request = new Request(query,function(err, rowCount, rows) {
             if (err) {
@@ -159,9 +151,9 @@ function wijzigenTussenPersoon(naam, adres, plaats, postcode, telefoon, contactp
 }
 
 
-function invoerenTussenPersoon(naam, adres, plaats, postcode,telefoon, contactpersoon, marge) {
+function invoerenRol(RolNaam, RolMinTarief, RolMaxTarief) {
     var connection = new Connection(config);
-    var query = 'exec wp_ra.invoerenTussenPersoon ' + '\'' + naam + '\',\'' +  adres  + '\',\'' + plaats  + '\',\'' + postcode + '\',\'' + telefoon + '\',\'' + contactpersoon + '\','  + marge
+    var query = 'exec wp_ra.invoerenRol ' + '\'' + RolNaam + '\',' +  RolMinTarief  + ',' + RolMaxTarief
     console.info(query)
     connection.on('connect', function (err) {
         request = new Request(
@@ -178,11 +170,11 @@ function invoerenTussenPersoon(naam, adres, plaats, postcode,telefoon, contactpe
     })   
 }
 
-function verwijderenTussenPersoon(id) {
+function verwijderenRol(id) {
     var connection = new Connection(config);
     connection.on('connect', function (err) {
         request = new Request(
-            'DELETE FROM [wp_ra].[tussenpersoon] WHERE TussenPersoonId = ' + id ,
+            'DELETE FROM [wp_ra].[Rol] WHERE RolId = ' + id ,
             function(err, rowCount, rows) {
             if (err) {
                 console.info(err);
