@@ -1,10 +1,11 @@
+
 {
   "name": "RecruitingAnalytics",
   "version": "0.16.4",
   "private": true,
   "scripts": {
-    "start": "node app",
-    "update": "david update"
+    "start":"node app.js",
+    "update": "Erik Update"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-balloon": "^1.0.0-beta.1",
