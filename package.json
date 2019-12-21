@@ -1,9 +1,9 @@
 {
-  "name": "Drywall",
+  "name": "RecruitingAnalytics",
   "version": "0.16.4",
   "private": true,
   "scripts": {
-    "start": "grunt",
+    "start": "node app",
     "update": "david update"
   },
   "dependencies": {
