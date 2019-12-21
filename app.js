@@ -6,7 +6,6 @@ var config = require('./config'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
-    mongoStore = require('connect-mongo')(session),
     http = require('http'),
     path = require('path'),
     multer  =   require('multer'),
@@ -58,8 +57,7 @@ app.use(cookieParser(config.cryptoKey));
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: config.cryptoKey,
-  store: new mongoStore({ url: config.mongodb.uri })
+  secret: config.cryptoKey
 }));
 // Connect Flash
 app.use(flash())
@@ -95,12 +93,6 @@ require('./routes/routes')(app, passport);
 
 //custom (friendly) error handler
 app.use(require('./views/http/index').http500);
-
-//setup utilities
-app.utility = {};
-app.utility.sendmail = require('./util/sendmail');
-app.utility.slugify = require('./util/slugify');
-app.utility.workflow = require('./util/workflow');
 
 //listen up
 app.server.listen(app.config.port, function(){
