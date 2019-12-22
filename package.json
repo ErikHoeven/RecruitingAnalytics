@@ -8,8 +8,6 @@
     "update": "Erik Update"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-balloon": "^1.0.0-beta.1",
-    "@ckeditor/ckeditor5-build-classic": "^1.0.0-beta.1",
     "async": "*",
     "backbone": "^1.x.x",
     "bcrypt": "*",
@@ -36,8 +34,6 @@
     "mssql": "^3.3.0",
     "multer": "*",
     "natural": "*",
-    "node-google-translate-skidz": "^1.1.0",
-    "node-uuid": "^1.4.8",
     "passport": "^0.2.x",
     "passport-github": "^0.1.x",
     "passport-google-oauth": "^0.2.x",
