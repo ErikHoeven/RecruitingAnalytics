@@ -74,4 +74,4 @@ app.server.on('listening',function(){
   console.log('ok, server is running');
 });
 
-server.listen(80);
+app.server.listen(80);
