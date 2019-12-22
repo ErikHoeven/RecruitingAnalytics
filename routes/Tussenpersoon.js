@@ -2,9 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
-var uuid = require('node-uuid');
 var async = require('async');
-var underscor = require('underscore')
+var underscore = require('underscore')
 
 var config = {
     server: 'srvdvgenerator.database.windows.net',

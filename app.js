@@ -65,13 +65,12 @@ require('./routes/routes')(app, passport);
 app.use(require('./views/http/index').http500);
 
 //listen up
-// app.server.listen(3000, function(){
-//   //and... we're live
-//   console.log('Server is running on port ' + 3000);
-// });
-
-app.server.on('listening',function(){
-  console.log('ok, server is running');
+app.server.listen(8080, function(){
+  //and... we're live
+  console.log('Server is running on port ' + 8080);
 });
 
-app.server.listen(80);
+// app.server.on('listening',function(){
+//   console.log('ok, server is running');
+// });
+
